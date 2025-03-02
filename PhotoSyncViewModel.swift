@@ -1,6 +1,7 @@
 import Foundation
 import Photos
 import UIKit
+import CommonCrypto
 import CryptoKit
 
 enum SyncStatus {
@@ -174,8 +175,14 @@ class PhotoSyncViewModel: ObservableObject {
                 return
             }
             
-            let hash = SHA256.hash(data: data)
-            let hashString = hash.compactMap { String(format: "%02x", $0) }.joined()
+            // Use CommonCrypto for SHA256 hash
+            var hashData = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
+            _ = hashData.withUnsafeMutableBytes { digestBytes in
+                data.withUnsafeBytes { messageBytes in
+                    CC_SHA256(messageBytes.baseAddress, CC_LONG(data.count), digestBytes.bindMemory(to: UInt8.self).baseAddress)
+                }
+            }
+            let hashString = hashData.map { String(format: "%02hhx", $0) }.joined()
             completion(hashString)
         }
     }
@@ -223,7 +230,7 @@ class PhotoSyncViewModel: ObservableObject {
                 // Simulated upload to MinIO
                 DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
                     // Simulate occasional failures for testing
-                    let success = arc4random_uniform(10) != 0 // 90% success rate
+                    let success = Int.random(in: 0..<10) != 0 // 90% success rate
                     
                     if success {
                         syncedCount += 1
