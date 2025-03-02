@@ -19,7 +19,7 @@ let package = Package(
             name: "MinIOPhotoSync",
             dependencies: [],
             path: ".",
-            exclude: ["README.md"],
+            exclude: ["README.md", "Tests"],
             resources: [
                 .process("Resources")
             ]
