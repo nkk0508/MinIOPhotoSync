@@ -22,9 +22,6 @@ let package = Package(
             exclude: ["README.md", "Tests"],
             resources: [
                 .process("Resources")
-            ],
-            swiftSettings: [
-                .unsafeFlags(["-import-objc-header", "MinIOPhotoSync-Bridging-Header.h"])
             ]
         ),
         .testTarget(

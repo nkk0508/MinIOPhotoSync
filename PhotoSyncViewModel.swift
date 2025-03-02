@@ -1,8 +1,6 @@
 import Foundation
 import Photos
 import UIKit
-import CommonCrypto
-import CryptoKit
 
 enum SyncStatus {
     case notSynced
@@ -175,14 +173,9 @@ class PhotoSyncViewModel: ObservableObject {
                 return
             }
             
-            // Use CommonCrypto for SHA256 hash
-            var hashData = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-            _ = hashData.withUnsafeMutableBytes { digestBytes in
-                data.withUnsafeBytes { messageBytes in
-                    CC_SHA256(messageBytes.baseAddress, CC_LONG(data.count), digestBytes.bindMemory(to: UInt8.self).baseAddress)
-                }
-            }
-            let hashString = hashData.map { String(format: "%02hhx", $0) }.joined()
+            // Use our Swift wrapper for SHA256 hash
+            let hashData = data.sha256()
+            let hashString = hashData.hexString()
             completion(hashString)
         }
     }
