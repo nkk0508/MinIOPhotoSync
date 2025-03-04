@@ -2,10 +2,10 @@ import Foundation
 import Photos
 
 class MinIOService {
-    private let serverURL: String
-    private let accessKey: String
-    private let secretKey: String
-    private let bucketName: String
+    let serverURL: String
+    let accessKey: String
+    let secretKey: String
+    let bucketName: String
     
     init(serverURL: String, accessKey: String, secretKey: String, bucketName: String) {
         self.serverURL = serverURL
