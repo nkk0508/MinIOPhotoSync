@@ -1,4 +1,5 @@
 import Foundation
+// 共通のモデル定義をインポート
 
 class MinIOXMLParser: NSObject, XMLParserDelegate {
     private var currentElement = ""
@@ -88,7 +89,23 @@ class MinIOXMLParser: NSObject, XMLParserDelegate {
     
     func parser(_ parser: XMLParser, foundCDATA CDATABlock: Data) {
         if let string = String(data: CDATABlock, encoding: .utf8) {
-            parser(parser, foundCharacters: string)
+            // CDATAブロックの内容を文字列として処理
+            let data = string.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            if isInContents && !data.isEmpty {
+                switch currentElement {
+                case "Key":
+                    currentKey += data
+                case "LastModified":
+                    currentLastModified += data
+                case "ETag":
+                    currentETag += data
+                case "Size":
+                    currentSize += data
+                default:
+                    break
+                }
+            }
         }
     }
 }

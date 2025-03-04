@@ -1,29 +1,7 @@
 import Foundation
 import Photos
 import UIKit
-
-enum SyncStatus {
-    case notSynced
-    case syncing
-    case synced
-    case failed
-}
-
-struct LocalPhoto: Identifiable {
-    let id: String
-    let asset: PHAsset
-    let thumbnail: UIImage
-    var syncStatus: SyncStatus = .notSynced
-    var lastModifiedDate: Date
-    var checksum: String?
-}
-
-struct MinIOPhoto: Identifiable {
-    let id: String
-    let url: URL
-    let lastModifiedDate: Date
-    let checksum: String?
-}
+// 共通のモデル定義をインポート
 
 class PhotoSyncViewModel: ObservableObject {
     @Published var localPhotos: [LocalPhoto] = []
